@@ -1,16 +1,5 @@
 apiVersion: v1
 entries:
-  testchart:
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2023-06-20T14:50:22.932777235Z"
-    description: A Helm chart for Kubernetes
-    digest: a8e42fe8f3996682cf4cb7ddce2974776cc992e8f5ca8543dc58773018ec8b3b
-    name: testchart
-    type: application
-    urls:
-    - https://github.com/Shabahang/unichart/releases/download/testchart-0.1.3/testchart-0.1.3.tgz
-    version: 0.1.3
   unichart:
   - apiVersion: v2
     appVersion: 1.16.0
