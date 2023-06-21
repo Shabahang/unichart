@@ -11,4 +11,15 @@ entries:
     urls:
     - https://github.com/Shabahang/unichart/releases/download/testchart-0.1.3/testchart-0.1.3.tgz
     version: 0.1.3
-generated: "2023-06-20T14:50:22.932781235Z"
+  unichart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-06-21T09:56:02.567772714Z"
+    description: A generic Helm chart to efficiently manage deployments on Kubernetes
+    digest: 21eef55d7e20f69018ae33fc061eca9723af0a9b17b2eb9f5dbc885d3bcc2604
+    name: unichart
+    type: application
+    urls:
+    - https://github.com/Shabahang/unichart/releases/download/unichart-0.1.4/unichart-0.1.4.tgz
+    version: 0.1.4
+generated: "2023-06-21T09:56:02.567778014Z"
