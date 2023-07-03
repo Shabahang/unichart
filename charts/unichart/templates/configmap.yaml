@@ -1,11 +1,11 @@
-{{- range $instance, $val := .Values.instances }}
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: App-configmap-{{ $instance }}
+  name: {{ include "unichart.fullname" . }}
+  labels:
+    {{- include "unichart.labels" . | nindent 4 }}
 data:
-{{- end }}    
-
-
-
+  {{- range $.Values.envs }}
+  {{ regexReplaceAllLiteral "(-{1})" .var_name "___" | quote }}:   {{ .var_value | quote }}
+  {{- end }}    
+  
