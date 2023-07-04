@@ -43,6 +43,13 @@ spec:
                   name: {{ include "unichart.fullname" $ }}
                   key: {{ regexReplaceAllLiteral "(-{1})" .var_name "___" | quote }}
             {{- end }}    
+            {{- range $.Values.secrets }}
+            - name: {{ .sec_name | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "unichart.fullname" $ }}
+                  key: {{ regexReplaceAllLiteral "(-{1})" .var_name "___" | quote }}
+            {{- end }}    
           {{- range $.Values.mounts.emptyDir }}
           volumeMounts:
             - mountPath: {{ .mount_path | quote }}
