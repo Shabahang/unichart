@@ -3,6 +3,16 @@ entries:
   unichart:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2023-07-04T13:27:48.410776595Z"
+    description: A generic Helm chart to efficiently manage deployments on Kubernetes
+    digest: f359cdf292c2ac3fe08b10b6ed44a9c6fe0ca80363a09e74e2a6dee4ff0cdc48
+    name: unichart
+    type: application
+    urls:
+    - https://github.com/Shabahang/unichart/releases/download/unichart-0.1.7/unichart-0.1.7.tgz
+    version: 0.1.7
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2023-07-03T12:18:43.989351078Z"
     description: A generic Helm chart to efficiently manage deployments on Kubernetes
     digest: e4029c9d7aba4bf62b81be6e10d435804c68df351f5b6a81dd9b048d0a11b3a5
@@ -31,4 +41,4 @@ entries:
     urls:
     - https://github.com/Shabahang/unichart/releases/download/unichart-0.1.4/unichart-0.1.4.tgz
     version: 0.1.4
-generated: "2023-07-03T12:18:43.989367578Z"
+generated: "2023-07-04T13:27:48.410789295Z"
