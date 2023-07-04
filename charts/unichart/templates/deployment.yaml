@@ -48,7 +48,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "unichart.fullname" $ }}
-                  key: {{ regexReplaceAllLiteral "(-{1})" .var_name "___" | quote }}
+                  key: {{ regexReplaceAllLiteral "(-{1})" .sec_name "___" | quote }}
             {{- end }}    
           {{- range $.Values.mounts.emptyDir }}
           volumeMounts:
