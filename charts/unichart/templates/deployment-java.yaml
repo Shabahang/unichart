@@ -1,0 +1,93 @@
+{{- if eq $.Values.php_caddy_deployments "java" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "unichart.fullname" . }}
+  labels:
+    {{- include "unichart.labels" . | nindent 4 }}
+spec:
+  {{- if not $.Values.autoscaling.enabled }}
+  replicas: {{ $.Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "unichart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+      {{- with $.Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "unichart.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "unichart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          env:
+            {{- range $.Values.envs }}
+            - name: {{ .var_name | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "unichart.fullname" $ }}
+                  key: {{ regexReplaceAllLiteral "(-{1})" .var_name "___" | quote }}
+            {{- end }}    
+            {{- range $.Values.secrets }}
+            - name: {{ .sec_name | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "unichart.fullname" $ }}
+                  key: {{ regexReplaceAllLiteral "(-{1})" .sec_name "___" | quote }}
+            {{- end }}    
+          {{- range $.Values.mounts.emptyDir }}
+          volumeMounts:
+            - mountPath: {{ .mount_path | quote }}
+              name: {{ .vol_name | quote }}
+          {{- end }}    
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "/bin/sleep 1; kill -QUIT 1"]
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "/bin/ps -ef | grep java | grep -v grep"]
+            initialDelaySeconds: 30
+            periodSeconds: 3
+          livenessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "/bin/ps -ef | grep java | grep -v grep"]
+            initialDelaySeconds: 120
+            periodSeconds: 3
+          resources:
+            {{- toYaml $.Values.resources | nindent 12 }}
+      {{- range $.Values.mounts.emptyDir }}
+      volumes:
+      - name: {{ .vol_name | quote }}
+        emptyDir: {}
+      {{- end }}    
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}  
