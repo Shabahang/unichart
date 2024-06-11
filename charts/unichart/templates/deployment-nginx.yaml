@@ -35,7 +35,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml $.Values.securityContext | nindent 12 }}
-          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default "latest" }}"
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
           env:
             {{- range $.Values.envs }}
@@ -61,16 +61,17 @@ spec:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "/bin/sleep 1; kill -QUIT 1"]
-          readinessProbe:
-            exec:
-              command: ["/bin/sh", "-c", "/bin/ps -ef | grep java | grep -v grep"]
-            initialDelaySeconds: 30
-            periodSeconds: 3
           livenessProbe:
-            exec:
-              command: ["/bin/sh", "-c", "/bin/ps -ef | grep java | grep -v grep"]
-            initialDelaySeconds: 120
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+            initialDelaySeconds: 3
             periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 80
           resources:
             {{- toYaml $.Values.resources | nindent 12 }}
       {{- range $.Values.mounts.emptyDir }}
