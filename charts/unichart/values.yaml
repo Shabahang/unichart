@@ -5,6 +5,16 @@
 ##  - app1
 ##  - app2
 
+
+# envs:
+#   - {var_name: "http_proxy"-, var_value: 'http://proxy.pluslan.de:8080'}
+# secrets:
+#   - {sec_name: "http_proxy", sec_value: '123456'}
+# kubeSecret:
+#   - {kubesec_name: "testSecret", sec_name: "PasswordFromSec", kubesec_key: "Password"}
+
+
+
 replicaCount: 1
 
 imagePullSecrets: []

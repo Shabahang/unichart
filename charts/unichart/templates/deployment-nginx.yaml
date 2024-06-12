@@ -52,6 +52,13 @@ spec:
                   name: {{ include "unichart.fullname" $ }}
                   key: {{ regexReplaceAllLiteral "(-{1})" .sec_name "___" | quote }}
             {{- end }}    
+            {{- range $.Values.kubeSecret }}
+            - name: {{ .sec_name | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .kubesec_name | quote }}
+                  key: {{ .kubesec_key | quote }}
+            {{- end }}    
           {{- range $.Values.mounts.emptyDir }}
           volumeMounts:
             - mountPath: {{ .mount_path | quote }}
