@@ -63,6 +63,13 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+ingressRoutes:
+  enabled: false
+  apiVersion: traefik.containo.us/v1alpha1
+  paths:
+    - { name: nowhere, match: Host(`nowhere.nowhere.io`), entrypoint: "websecure", tlsSecret: wildcard-cluster-tlssecret }
+
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
