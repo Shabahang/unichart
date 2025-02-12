@@ -171,4 +171,15 @@ entries:
     urls:
     - https://github.com/Shabahang/unichart/releases/download/unichart-0.1.4/unichart-0.1.4.tgz
     version: 0.1.4
-generated: "2025-01-23T17:58:28.631566883Z"
+  unihelm:
+  - apiVersion: v2
+    appVersion: 1.28.0
+    created: "2025-02-12T13:45:34.370408946Z"
+    description: A generic Helm chart to efficiently manage deployments on Kubernetes
+    digest: 804585ab5d6006f47be78e9c6e92cbaf162707d3c3f97e8acff998144aba324f
+    name: unihelm
+    type: application
+    urls:
+    - https://github.com/Shabahang/unichart/releases/download/unihelm-0.2.1/unihelm-0.2.1.tgz
+    version: 0.2.1
+generated: "2025-02-12T13:45:34.370461254Z"
