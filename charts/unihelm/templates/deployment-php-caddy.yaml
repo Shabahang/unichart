@@ -1,0 +1,149 @@
+{{- if eq $.Values.deployType "php-caddy" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "unihelm.fullname" . }}
+  labels:
+    {{- include "unihelm.labels" . | nindent 4 }}
+spec:
+  {{- if not $.Values.autoscaling.enabled }}
+  replicas: {{ $.Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "unihelm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+      {{- with $.Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "unihelm.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "unihelm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-caddy
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ $.Values.repo_name_full }}_caddy:{{ $.Values.image.tag | default "latest" }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          env:
+            - name: SERVER_NAME
+              value: :80
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: admin
+              containerPort: 2019
+              protocol: TCP
+          {{- range $.Values.mounts.emptyDir }}
+          volumeMounts:
+            - mountPath: {{ .mount_path | quote }}
+              name: {{ .vol_name | quote }}
+          {{- end }}    
+          lifecycle:
+            preStop:
+              exec:
+                command: ["curl", "-XPOST", "http://localhost:2019/stop"]
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          resources:
+            {{- toYaml $.Values.resources  | nindent 12 }}
+        - name: {{ .Chart.Name }}-php
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ $.Values.repo_name_full  }}_php:{{ $.Values.image.tag | default "latest" }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          env:
+            {{- range $.Values.envs.asConfigMap }}
+            - name: {{ .var_name | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "unihelm.fullname" $ }}
+                  key: {{ regexReplaceAllLiteral "(-{1})" .var_name "___" | quote }}
+            {{- end }}    
+            {{- range $.Values.envs.asSecret }}
+            - name: {{ .var_name | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "unihelm.fullname" $ }}
+                  key: {{ regexReplaceAllLiteral "(-{1})" .var_name "___" | quote }}
+            {{- end }}    
+            {{- range $.Values.envs.fromConfigMap }}
+            - name: {{ .var_name | quote }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .ref_configmap | quote }}
+                  key: {{ .from_key | quote }}
+            {{- end }}    
+            {{- range $.Values.envs.fromSecret }}
+            - name: {{ .var_name | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .ref_secret | quote }}
+                  key: {{ .from_key | quote }}
+            {{- end }}    
+          {{- range $.Values.mounts.emptyDir }}
+          volumeMounts:
+            - mountPath: {{ .mount_path | quote }}
+              name: {{ .vol_name | quote }}
+          {{- end }}    
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "/bin/sleep 1; kill -QUIT 1"]
+          startupProbe:
+            exec:
+              command:
+                - docker-healthcheck
+            failureThreshold: 40
+            periodSeconds: 3
+          readinessProbe:
+            exec:
+              command:
+                - docker-healthcheck
+            periodSeconds: 3
+          livenessProbe:
+            exec:
+              command:
+                - docker-healthcheck
+            periodSeconds: 3
+          resources:
+            {{- toYaml $.Values.resources  | nindent 12 }}
+      {{- range $.Values.mounts.emptyDir }}
+      volumes:
+      - name: {{ .vol_name | quote }}
+        emptyDir: {}
+      {{- end }}    
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}    

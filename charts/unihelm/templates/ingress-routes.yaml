@@ -1,14 +1,14 @@
-{{- if $.Values.ingressRoutes.enabled -}}
-{{- $fullName := include "unichart.fullname" $ -}}
+{{- if .Values.ingressRoutes.enabled -}}
+{{- $fullName := include "unihelm.fullname" $ -}}
 {{- $svcPort := $.Values.service.port -}}
-{{- range $.Values.ingressRoutes.paths }}
+{{- range .Values.ingressRoutes.paths }}
 ---
 apiVersion: {{ $.Values.ingressRoutes.apiVersion }}
 kind: IngressRoute
 metadata:
   name: {{ $fullName }}-{{ .name }}-route
   labels:
-    {{- include "unichart.labels" $ | nindent 4 }}
+    {{- include "unihelm.labels" $ | nindent 4 }}
 spec:
   entryPoints:
     - {{ .entrypoint | default "websecure" | quote }}

@@ -1,11 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "unichart.fullname" . }}
+  name: {{ include "unihelm.fullname" . }}
   labels:
-    {{- include "unichart.labels" . | nindent 4 }}
+    {{- include "unihelm.labels" . | nindent 4 }}
 data:
-  {{- range $.Values.envs }}
+  {{- range $.Values.envs.asConfigMap }}
   {{ regexReplaceAllLiteral "(-{1})" .var_name "___" | quote }}:   {{ .var_value | quote }}
   {{- end }}    
-  

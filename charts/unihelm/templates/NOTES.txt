@@ -1,0 +1,45 @@
+Thank you for installing {{ .Chart.Name }}.
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Your release is named {{ .Release.Name }}.
+
+To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
+
+{{- /* 
+
+{{  $new_dict := dict }}
+{{- range $key, $val := $.Values.listtest.A1.list }}
+key_is {{  $key }} and val_is {{ $val }}
+{{  mergeOverwrite $new_dict $val  }}
+{{- end }}    
+ 
+
+
+the dict is :
+{{  $new_dict  }}
+
+
+And the merge status is :
+{{- toYaml ( merge $.Values.test.B1 $.Values.test.A1 ) | nindent 4  }}
+
+And the list merge status is :
+{{ $ilist := $.Values.test.B1.list }}
+{{  range $.Values.test.A1.list }}
+{{ $tmplist := $ilist }}
+{{ if eq ( has . $tmplist ) false }}
+{{ $ilist = mustAppend $tmplist . }}
+{{- end }}
+{{- end }}
+{{- toYaml $ilist | nindent 4 }}
+
+*/}}
+
+

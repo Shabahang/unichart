@@ -5,15 +5,16 @@
 ##  - app1
 ##  - app2
 
-
-# envs:
-#   - {var_name: "http_proxy"-, var_value: 'http://proxy.pluslan.de:8080'}
-# secrets:
-#   - {sec_name: "http_proxy", sec_value: '123456'}
-# kubeSecret:
-#   - {kubesec_name: "testSecret", sec_name: "PasswordFromSec", kubesec_key: "Password"}
-
-
+envs: 
+  asConfigMap: []
+    #- {var_name: TRUSTED_PROXIES, var_value: '127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16'}
+  asSecret: []
+    #- {var_name: http_proxy_pass, var_value: '123456'}  fromSecret: []
+  fromConfigMap: []
+    #- {ref_configmap: "sample-configmap-cleo", var_name: SALES_FORCE_EP ,from_key: Endpoint }
+  fromSecret: []
+    #- {ref_secret: "sample-secret-credential-cleo", var_name: SALES_FORCE_USER ,from_key: User }
+#ToDo:  Document envs
 
 replicaCount: 1
 
@@ -94,3 +95,4 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
