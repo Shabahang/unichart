@@ -174,6 +174,16 @@ entries:
   unihelm:
   - apiVersion: v2
     appVersion: 1.28.0
+    created: "2025-02-12T15:24:59.017819129Z"
+    description: A generic Helm chart to efficiently manage deployments on Kubernetes
+    digest: 20907d2bd913392ddcb7aa9081d13acb8d869ec8988cf6396371e96a8d696135
+    name: unihelm
+    type: application
+    urls:
+    - https://github.com/Shabahang/unihelm/releases/download/unihelm-0.2.2/unihelm-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 1.28.0
     created: "2025-02-12T13:45:34.370408946Z"
     description: A generic Helm chart to efficiently manage deployments on Kubernetes
     digest: 804585ab5d6006f47be78e9c6e92cbaf162707d3c3f97e8acff998144aba324f
@@ -182,4 +192,4 @@ entries:
     urls:
     - https://github.com/Shabahang/unichart/releases/download/unihelm-0.2.1/unihelm-0.2.1.tgz
     version: 0.2.1
-generated: "2025-02-12T13:45:34.370461254Z"
+generated: "2025-02-12T15:24:59.017867479Z"
